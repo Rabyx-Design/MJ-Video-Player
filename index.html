@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJ Video Player</title>
+    <style>
+        body {
+            font-family: "Montserrat", sans-serif;
+            text-align: center;
+            background-image: url(bg/bgimage.jpg);
+            background-size: cover;
+        }
+
+        h1{
+            color: red;
+            text-align: left;
+            margin: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin: 30px;
+        }
+        .tab {
+            padding: 10px 15px;
+            border: 1.5px solid red;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: none;
+            color: red;
+        }
+        .active {
+           color: white;
+           border-color: white;
+        }
+        video {
+            width: 80%;
+            max-width: 700px;
+            margin: 0 auto 20px;
+            position: absolute;
+            right: 30px;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            position: absolute;
+            bottom:40px;
+            right: 30px;
+        }
+        button {
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            color: red;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: red;
+            color: white;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Micheal Jackson Video Player</h1>
+
+     <!-- Video Player -->
+     <video id="videoPlayer" controls>
+        <source id="videoSource" src="video-assets/thriller.mp4" type="video/mp4">
+    </video>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" onclick="loadVideo(0)">Thriller</div>
+        <div class="tab" onclick="loadVideo(1)">Beat It</div>
+        <div class="tab" onclick="loadVideo(2)">Bad</div>
+        <div class="tab" onclick="loadVideo(3)">Billie Jean</div>
+        <div class="tab" onclick="loadVideo(4)">Remember the Time</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button onclick="prevVideo()">⏮ Previous</button>
+        <button id="playBtn" onclick="togglePlayPause()">▶ Play</button>
+        <button id="pauseBtn" class="hidden" onclick="togglePlayPause()">⏸ Pause</button>
+        <button onclick="stopVideo()">⏹ Stop</button>
+        <button onclick="nextVideo()">⏭ Next</button>
+    </div>
+
+    <script>
+        let videos = ["video-assets/thriller.mp4", "video-assets/beat-it.mp4", "video-assets/bad.mp4", "video-assets/billie-jean.mp4", "video-assets/remember-the-time.mp4"];
+        let currentIndex = 0;
+        let videoPlayer = document.getElementById("videoPlayer");
+        let videoSource = document.getElementById("videoSource");
+        let tabs = document.querySelectorAll(".tab");
+        let playBtn = document.getElementById("playBtn");
+        let pauseBtn = document.getElementById("pauseBtn");
+
+        function updateTabs() {
+            tabs.forEach(tab => tab.classList.remove("active"));
+            tabs[currentIndex].classList.add("active");
+        }
+
+        function loadVideo(index) {
+            if (index >= 0 && index < videos.length) {
+                currentIndex = index;
+                videoSource.src = videos[currentIndex];
+                videoPlayer.load();
+                updateTabs();
+                showPlayButton();
+            }
+        }
+
+        function nextVideo() {
+            if (currentIndex < videos.length - 1) {
+                loadVideo(currentIndex + 1);
+            }
+        }
+
+        function prevVideo() {
+            if (currentIndex > 0) {
+                loadVideo(currentIndex - 1);
+            }
+        }
+
+        function togglePlayPause() {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+                showPauseButton();
+            } else {
+                videoPlayer.pause();
+                showPlayButton();
+            }
+        }
+
+        function stopVideo() {
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+            showPlayButton();
+        }
+
+        function showPlayButton() {
+            playBtn.classList.remove("hidden");
+            pauseBtn.classList.add("hidden");
+        }
+
+        function showPauseButton() {
+            pauseBtn.classList.remove("hidden");
+            playBtn.classList.add("hidden");
+        }
+
+        videoPlayer.addEventListener("play", showPauseButton);
+        videoPlayer.addEventListener("pause", showPlayButton);
+    </script>
+
+
+</body>
+</html>
